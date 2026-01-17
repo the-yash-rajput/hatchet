@@ -26,7 +26,7 @@ func GetTablesTemplate() (*template.Template, error) {
 const headers = `<!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Ken Chen's Hatchet</title>
+  <title> TM - Mongo Logs Analyser(Inspired by Hatchet)</title>
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="Expires" content="0" />
@@ -440,7 +440,7 @@ func getContentHTML() string {
 </style>
 <div class="menu-bar">
   <button class="menu-item" data-page="home" onclick="location.href='/'; return false;">
-    <i class="fa fa-home"></i> Hatchet
+    <i class="fa fa-home"></i> Home
   </button>
   <button class="menu-item" data-page="audit" onclick="loadData('/hatchets/{{.Hatchet}}/stats/audit'); return false;">
     <i class="fa fa-shield"></i> Audit
@@ -799,13 +799,10 @@ func getMainPage() string {
 <!-- Row 1: Title/Description (50%) | Tutorial Video (50%) -->
 <div style='display: flex; gap: 30px; padding: 15px 0; border-bottom: 1px solid var(--border-color); margin-bottom: 15px;'>
 	<div style='flex: 1; display: flex; flex-direction: column; justify-content: flex-start;'>
-		<h1 style='margin: 0 0 16px 0; font-size: 3.2em; font-family: Righteous, cursive; letter-spacing: 3px; color: #333;'>Hatchet<img src='data:image/png;base64,` + CHEN_ICO + `' style='vertical-align: top; margin-left: 2px; transform: rotate(-23deg); position: relative; top: -5px;'/></h1>
-		<p style='margin: 0; color: #444; font-size: 1.35em; line-height: 1.6; max-width: 560px; font-style: italic;'>
-			Like a skilled woodsman reading the rings of a tree, Hatchet reveals the stories hidden within your MongoDB logs — from performance patterns and activity rhythms to security insights and troubleshooting trails.
+		<h1 style='margin: 0 0 16px 0; font-size: 3.2em; font-family: Righteous, cursive; letter-spacing: 3px; color: #333;'>Logs Analyser (MongoDB) <img src='data:image/png;base64,` + CHEN_ICO + `' style='vertical-align: top; margin-left: 2px; transform: rotate(-23deg); position: relative; top: -5px;'/></h1>
+		<p style='margin: 0; color: #444; font-size: 1.35em; line-height: 1.6; font-style: italic;'>
+			Like a skilled woodsman reading the rings of a tree, TM – Mongo Analyser reveals the stories hidden within your MongoDB logs — from performance patterns and activity rhythms to security insights and troubleshooting trails.
 		</p>
-	</div>
-	<div style='flex: 1; display: flex; align-items: center; justify-content: center;'>
-		<iframe width="560" height="315" src="https://www.youtube.com/embed/WavOyaFTDE8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 	</div>
 </div>
 
@@ -825,10 +822,10 @@ func getMainPage() string {
 		</div>
 		<!-- Hatcheted Logs Table -->
 		<div style='flex: 1;'>
-			<label style='font-weight: bold; font-size: 1.3em; margin-bottom: 8px; display: block;'>Select a hatcheted log:</label>
+			<label style='font-weight: bold; font-size: 1.3em; margin-bottom: 8px; display: block;'>Select a log file:</label>
 			<div class='hatchet-table-container'>
 				<table class='hatchet-table'>
-					<tr><th>#</th><th>Hatcheted Log</th><th>Processed Time</th></tr>
+					<tr><th>#</th><th>Log File</th><th>Processed Time</th></tr>
 {{range $n, $entry := .Hatchets}}
 					<tr class='clickable-row' onclick='selectHatchet("{{$entry.Name}}")'>
 						<td style='text-align: center; width: 40px;'>{{add $n 1}}</td>
@@ -844,9 +841,7 @@ func getMainPage() string {
 	</div>
 </div>
 
-<a class="help-link" onclick="document.getElementById('help-section').classList.toggle('open'); this.querySelector('span').textContent = document.getElementById('help-section').classList.contains('open') ? 'Hide documentation' : 'View documentation'; return false;">
-	<i class="fa fa-question-circle"></i> <span>View documentation</span> →
-</a>
+
 <div id="help-section" class="help-section">
 <h3>Reports</h3>
     <table width='100%'>
@@ -898,7 +893,16 @@ func getMainPage() string {
 </div><!-- end home-container -->
 <h4 align='center'><hr/>{{.Version}}</h4>
 `
-	template += fmt.Sprintf(`<div class="footer"><img valign="middle" src='data:image/png;base64,%v'/> Ken Chen</div>`, CHEN_ICO)
+	template += fmt.Sprintf(`
+  <div class="footer">
+    <img valign="middle" src='data:image/png;base64,%v'/>
+    TM – Mongo Analyser
+    <span style="opacity:0.7; font-size:12px; margin-left:6px;">
+      (Inspired by Hatchet)
+    </span>
+  </div>
+`, CHEN_ICO)
+
 	return template
 }
 
@@ -909,7 +913,7 @@ func GetErrorTemplate() (*template.Template, error) {
 	<h1 style='color: #DB4437; font-size: 2em;'><i class="fa fa-exclamation-triangle"></i> Error</h1>
 	<div style='background: #FFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin: 20px 0;'>
 		<p style='color: #666; font-size: 1.1em; margin-bottom: 15px;'>{{.Message}}</p>
-		<p style='color: #999; font-size: 0.9em;'>Hatchet: <strong>{{.Hatchet}}</strong></p>
+		<p style='color: #999; font-size: 0.9em;'>TM - Logs Analyser: <strong>{{.Hatchet}}</strong></p>
 	</div>
 	<button class='button' onclick="location.href='/';" style='font-size: 1.1em; padding: 10px 30px;'>
 		<i class="fa fa-home"></i> Back to Home
