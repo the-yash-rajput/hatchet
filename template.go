@@ -915,7 +915,7 @@ func GetErrorTemplate() (*template.Template, error) {
 		<p style='color: #666; font-size: 1.1em; margin-bottom: 15px;'>{{.Message}}</p>
 		<p style='color: #999; font-size: 0.9em;'>TM - Logs Analyser: <strong>{{.Hatchet}}</strong></p>
 	</div>
-	<button class='button' onclick="location.href='/';" style='font-size: 1.1em; padding: 10px 30px;'>
+	<button class='button' onclick="location.href='/hatchets';" style='font-size: 1.1em; padding: 10px 30px;'>
 		<i class="fa fa-home"></i> Back to Home
 	</button>
 </div>
