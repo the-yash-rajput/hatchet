@@ -439,7 +439,7 @@ func getContentHTML() string {
   .content-container { background: #EEF2EE; border-radius: 24px; padding: 30px 40px; margin: 20px auto; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08); }
 </style>
 <div class="menu-bar">
-  <button class="menu-item" data-page="home" onclick="location.href='/'; return false;">
+  <button class="menu-item" data-page="home" onclick="location.href='/hatchets'; return false;">
     <i class="fa fa-home"></i> Home
   </button>
   <button class="menu-item" data-page="audit" onclick="loadData('/hatchets/{{.Hatchet}}/stats/audit'); return false;">
