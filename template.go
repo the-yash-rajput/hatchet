@@ -369,7 +369,7 @@ const headers = `<!DOCTYPE html>
     	if (event.state && event.state.url) {
     		loadData(event.state.url, true);
     	} else {
-    		location.href = '/';
+    		location.href = '/hatchets';
     	}
     };
     
