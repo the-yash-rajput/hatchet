@@ -442,13 +442,13 @@ func getContentHTML() string {
   <button class="menu-item" data-page="home" onclick="location.href='/hatchets'; return false;">
     <i class="fa fa-home"></i> Home
   </button>
-  <button class="menu-item" data-page="audit" onclick="loadData('/hatchets/{{.Hatchet}}/stats/audit'); return false;">
+  <button class="menu-item" data-page="audit" onclick="loadData('/api/tma/hatchets/{{.Hatchet}}/stats/audit'); return false;">
     <i class="fa fa-shield"></i> Audit
   </button>
-  <button class="menu-item" data-page="stats" onclick="loadData('/hatchets/{{.Hatchet}}/stats/slowops'); return false;">
+  <button class="menu-item" data-page="stats" onclick="loadData('/api/tma/hatchets/{{.Hatchet}}/stats/slowops'); return false;">
     <i class="fa fa-info"></i> Stats
   </button>
-  <button class="menu-item" data-page="topn" onclick="loadData('/hatchets/{{.Hatchet}}/logs/slowops'); return false;">
+  <button class="menu-item" data-page="topn" onclick="loadData('/api/tma/hatchets/{{.Hatchet}}/logs/slowops'); return false;">
     <i class="fa fa-list"></i> Top N
   </button>
   <div class="menu-dropdown">
@@ -468,12 +468,12 @@ func getContentHTML() string {
 		if i == 0 {
 			continue
 		}
-		html += fmt.Sprintf("<a href='#' onclick=\"loadData('/hatchets/{{.Hatchet}}/charts%v'); return false;\">%v</a>", item.URL, item.Title)
+		html += fmt.Sprintf("<a href='#' onclick=\"loadData('/api/tma/hatchets/{{.Hatchet}}/charts%v'); return false;\">%v</a>", item.URL, item.Title)
 	}
 
 	html += `</div>
   </div>
-  <button class="menu-item" data-page="search" onclick="loadData('/hatchets/{{.Hatchet}}/logs/all?component=NONE'); return false;">
+  <button class="menu-item" data-page="search" onclick="loadData('/api/tma/hatchets/{{.Hatchet}}/logs/all?component=NONE'); return false;">
     <i class="fa fa-search"></i> Search
   </button>
 </div>
@@ -485,7 +485,7 @@ func getContentHTML() string {
 	function refreshChart() {
 		var sd = document.getElementById('start').value;
 		var ed = document.getElementById('end').value;
-		loadData('/hatchets/{{.Hatchet}}/charts{{.Chart.URL}}&duration=' + sd + ',' + ed);
+		loadData('/api/tma/hatchets/{{.Hatchet}}/charts{{.Chart.URL}}&duration=' + sd + ',' + ed);
 	}
 
 	// Highlight active menu item based on URL
@@ -511,7 +511,7 @@ func getMainPage() string {
 	template := `
 <script>
 	function selectHatchet(name) {
-		loadData('/hatchets/' + name + '/stats/audit'); 
+		loadData('/api/tma/hatchets/' + name + '/stats/audit'); 
 	}
 	function renameHatchet(oldName, event) {
 		event.stopPropagation();
@@ -519,7 +519,7 @@ func getMainPage() string {
 		if (newName && newName !== oldName) {
 			var loading = document.getElementById('loading');
 			loading.style.display = 'block';
-			fetch('/api/hatchet/v1.0/rename?old=' + encodeURIComponent(oldName) + '&new=' + encodeURIComponent(newName), {method: 'POST'})
+			fetch('/api/tma/hatchet/v1.0/rename?old=' + encodeURIComponent(oldName) + '&new=' + encodeURIComponent(newName), {method: 'POST'})
 				.then(response => response.json())
 				.then(data => {
 					loading.style.display = 'none';
@@ -540,7 +540,7 @@ func getMainPage() string {
 		if (confirm('Delete "' + name + '"?\n\nThis action cannot be undone.')) {
 			var loading = document.getElementById('loading');
 			loading.style.display = 'block';
-			fetch('/api/hatchet/v1.0/delete?name=' + encodeURIComponent(name), {method: 'DELETE'})
+			fetch('/api/tma/hatchet/v1.0/delete?name=' + encodeURIComponent(name), {method: 'DELETE'})
 				.then(response => response.json())
 				.then(data => {
 					loading.style.display = 'none';
@@ -593,7 +593,7 @@ func getMainPage() string {
 		formData.append('logfile', file);
 		
 		var xhr = new XMLHttpRequest();
-		xhr.open('POST', '/api/hatchet/v1.0/upload', true);
+		xhr.open('POST', '/api/tma/hatchet/v1.0/upload', true);
 		
 		xhr.upload.onprogress = function(e) {
 			if (e.lengthComputable) {
@@ -633,7 +633,7 @@ func getMainPage() string {
 		
 		var poll = setInterval(function() {
 			pollCount++;
-			fetch('/api/hatchet/v1.0/upload/status/' + encodeURIComponent(name))
+			fetch('/api/tma/hatchet/v1.0/upload/status/' + encodeURIComponent(name))
 				.then(response => response.json())
 				.then(data => {
 					if (data.status === 'complete') {
@@ -871,23 +871,23 @@ func getMainPage() string {
 	template += `<h3 style='margin-top: 24px;'>URL</h3>
 <ul class="api">
 	<li>/</li>
-	<li>/hatchets/{hatchet}/charts/{chart}[?type={str}]</li>
-	<li>/hatchets/{hatchet}/logs/all[?component={str}&context={str}&duration={date},{date}&severity={str}&limit=[{offset},]{int}]</li>
-	<li>/hatchets/{hatchet}/logs/slowops[?topN={int}]</li>
-	<li>/hatchets/{hatchet}/stats/slowops[?COLLSCAN={bool}&orderBy={str}]</li>
+	<li>/api/tma/hatchets/{hatchet}/charts/{chart}[?type={str}]</li>
+	<li>/api/tma/hatchets/{hatchet}/logs/all[?component={str}&context={str}&duration={date},{date}&severity={str}&limit=[{offset},]{int}]</li>
+	<li>/api/tma/hatchets/{hatchet}/logs/slowops[?topN={int}]</li>
+	<li>/api/tma/hatchets/{hatchet}/stats/slowops[?COLLSCAN={bool}&orderBy={str}]</li>
 </ul>
 
 <h3 style='margin-top: 24px;'>API</h3>
 <ul class="api">
-	<li><b>POST</b> /api/hatchet/v1.0/upload - Upload log file (multipart form: logfile, name)</li>
-	<li><b>GET</b> /api/hatchet/v1.0/upload/status/{name} - Check upload processing status</li>
-	<li><b>POST</b> /api/hatchet/v1.0/rename?old={name}&new={name} - Rename a hatchet</li>
-	<li><b>DELETE</b> /api/hatchet/v1.0/delete?name={name} - Delete a hatchet</li>
-	<li>/api/hatchet/v1.0/hatchets/{hatchet}/logs/all[?component={str}&context={str}&duration={date},{date}&severity={str}&limit=[{offset},]{int}]</li>
-	<li>/api/hatchet/v1.0/hatchets/{hatchet}/logs/slowops[?topN={int}]</li>
-	<li>/api/hatchet/v1.0/hatchets/{hatchet}/stats/audit</li>
-	<li>/api/hatchet/v1.0/hatchets/{hatchet}/stats/slowops[?COLLSCAN={bool}&orderBy={str}]</li>
-	<li>/api/hatchet/v1.0/mongodb/{version}/drivers/{driver}?compatibleWith={driver version}</li>
+	<li><b>POST</b> /api/tma/hatchet/v1.0/upload - Upload log file (multipart form: logfile, name)</li>
+	<li><b>GET</b> /api/tma/hatchet/v1.0/upload/status/{name} - Check upload processing status</li>
+	<li><b>POST</b> /api/tma/hatchet/v1.0/rename?old={name}&new={name} - Rename a hatchet</li>
+	<li><b>DELETE</b> /api/tma/hatchet/v1.0/delete?name={name} - Delete a hatchet</li>
+	<li>/api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/logs/all[?component={str}&context={str}&duration={date},{date}&severity={str}&limit=[{offset},]{int}]</li>
+	<li>/api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/logs/slowops[?topN={int}]</li>
+	<li>/api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/stats/audit</li>
+	<li>/api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/stats/slowops[?COLLSCAN={bool}&orderBy={str}]</li>
+	<li>/api/tma/hatchet/v1.0/mongodb/{version}/drivers/{driver}?compatibleWith={driver version}</li>
 </ul>
 </div>
 </div><!-- end home-container -->

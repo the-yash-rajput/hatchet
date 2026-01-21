@@ -93,7 +93,7 @@ func getSlowOpsLogsTable(download string) string {
 	function downloadTopN() {
 		anchor = document.createElement('a');
 		anchor.download = '{{.Hatchet}}_topn.html';
-		anchor.href = '/hatchets/{{.Hatchet}}/logs/slowops?download=true';
+		anchor.href = '/api/tma/hatchets/{{.Hatchet}}/logs/slowops?download=true';
 		anchor.dataset.downloadurl = ['text/html', anchor.download, anchor.href].join(':');
 		anchor.click();
 	}
@@ -135,7 +135,7 @@ func getSlowOpsLogsTable(download string) string {
 			<td>{{ formatDateTime $value.Timestamp }}</td>
 			<td>{{ $value.Severity }}</td>
 			<td>{{ $value.Component }}</td>
-			<td><a href='/hatchets/{{$hatchet}}/logs/all?context={{$value.Context}}'>{{ $value.Context }}</a></td>
+			<td><a href='/api/tma/hatchets/{{$hatchet}}/logs/all?context={{$value.Context}}'>{{ $value.Context }}</a></td>
 			<td class='break'>{{ highlightLog $value.Message }}</td>
 			<td align='center'><button id='btn-topn-{{$n}}' class='json-toggle-btn' onclick='toggleJsonView("topn-{{$n}}")' title='View formatted JSON'>{}</button></td>
 		</tr>
@@ -258,7 +258,7 @@ func getLegacyLogsTable() string {
 			<td>{{ formatDateTime $value.Timestamp }}</td>
 			<td>{{ $value.Severity }}</td>
 			<td>{{ $value.Component }}</td>
-			<td><a href='/hatchets/{{$hatchet}}/logs/all?context={{$value.Context}}'>{{ $value.Context }}</a></td>
+			<td><a href='/api/tma/hatchets/{{$hatchet}}/logs/all?context={{$value.Context}}'>{{ $value.Context }}</a></td>
 			<td class='break'>{{ highlightLog $value.Message $search }}</td>
 			<td align='center'><button id='btn-search-{{$n}}' class='json-toggle-btn' onclick='toggleJsonView("search-{{$n}}")' title='View formatted JSON'>{}</button></td>
 		</tr>
@@ -312,7 +312,7 @@ func getLegacyLogsTable() string {
 			severity: severity,
 			context: context
 		}));
-		loadData('/hatchets/{{.Hatchet}}/logs/all?component='+component+'&severity='+severity+'&context='+context);
+		loadData('/api/tma/hatchets/{{.Hatchet}}/logs/all?component='+component+'&severity='+severity+'&context='+context);
 	}
 
 	// Restore previous search if component=NONE (clicked from menu)

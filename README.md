@@ -71,9 +71,9 @@ Upload MongoDB log files directly through the web interface - no command line ne
 
 ### Share Analysis via Direct Links
 Share your analysis with team members using direct URLs:
-- `/hatchets/{name}/stats/audit` - Security audit report
-- `/hatchets/{name}/stats/slowops` - Slow query statistics
-- `/hatchets/{name}/charts/operations` - Performance charts
+- `/api/tma/hatchets/{name}/stats/audit` - Security audit report
+- `/api/tma/hatchets/{name}/stats/slowops` - Slow query statistics
+- `/api/tma/hatchets/{name}/charts/operations` - Performance charts
 
 ### Download Reports
 Download Audit and Stats reports as standalone HTML files for offline viewing or sharing via email/Slack. Click the "Download" button on any report page.
@@ -84,12 +84,12 @@ Download Audit and Stats reports as standalone HTML files for offline viewing or
 
 ### REST API
 Hatchet provides a REST API for programmatic access:
-- `POST /api/hatchet/v1.0/upload` - Upload log file (multipart form)
-- `GET /api/hatchet/v1.0/upload/status/{name}` - Check upload status
-- `POST /api/hatchet/v1.0/rename?old={name}&new={name}` - Rename hatchet
-- `DELETE /api/hatchet/v1.0/delete?name={name}` - Delete hatchet
-- `GET /api/hatchet/v1.0/hatchets/{name}/stats/audit` - Get audit data (JSON)
-- `GET /api/hatchet/v1.0/hatchets/{name}/stats/slowops` - Get slow ops data (JSON)
+- `POST /api/tma/hatchet/v1.0/upload` - Upload log file (multipart form)
+- `GET /api/tma/hatchet/v1.0/upload/status/{name}` - Check upload status
+- `POST /api/tma/hatchet/v1.0/rename?old={name}&new={name}` - Rename hatchet
+- `DELETE /api/tma/hatchet/v1.0/delete?name={name}` - Delete hatchet
+- `GET /api/tma/hatchet/v1.0/api/tma/hatchets/{name}/stats/audit` - Get audit data (JSON)
+- `GET /api/tma/hatchet/v1.0/api/tma/hatchets/{name}/stats/slowops` - Get slow ops data (JSON)
 
 if you choose to view in the legacy format without a browser, use the command below:
 ```bash

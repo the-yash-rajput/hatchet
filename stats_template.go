@@ -52,12 +52,12 @@ func getStatsTable(collscan bool, orderBy string, download string) string {
 <script>
 	function getSlowopsStats() {
 		var b = document.getElementById('collscan').checked;
-		loadData('/hatchets/{{.Hatchet}}/stats/slowops?orderBy=%v&COLLSCAN='+b);
+		loadData('/api/tma/hatchets/{{.Hatchet}}/stats/slowops?orderBy=%v&COLLSCAN='+b);
 	}
 	function downloadStats() {
         anchor = document.createElement('a');
         anchor.download = '{{.Hatchet}}_stats.html';
-        anchor.href = '/hatchets/{{.Hatchet}}/stats/slowops?type=stats&download=true';
+        anchor.href = '/api/tma/hatchets/{{.Hatchet}}/stats/slowops?type=stats&download=true';
         anchor.dataset.downloadurl = ['text/html', anchor.download, anchor.href].join(':');
         anchor.click();
     }
@@ -172,13 +172,13 @@ func getStatsTable(collscan bool, orderBy string, download string) string {
 		desc = ""
 	}
 	html += `<table width='100%'><tr><th>#</th>`
-	html += fmt.Sprintf(`<th>op <a class='sort' href='/hatchets/{{.Hatchet}}/stats/slowops?orderBy=op&COLLSCAN=%v'>%v</th>`, collscan, asc)
-	html += fmt.Sprintf(`<th>namespace <a class='sort' href='/hatchets/{{.Hatchet}}/stats/slowops?orderBy=ns&order=ASC&COLLSCAN=%v'>%v</th>`, collscan, asc)
-	html += fmt.Sprintf(`<th>count <a class='sort' href='/hatchets/{{.Hatchet}}/stats/slowops?orderBy=count&COLLSCAN=%v'>%v</th>`, collscan, desc)
-	html += fmt.Sprintf(`<th>avg ms <a class='sort' href='/hatchets/{{.Hatchet}}/stats/slowops?orderBy=avg_ms&COLLSCAN=%v'>%v</th>`, collscan, desc)
-	html += fmt.Sprintf(`<th>max ms <a class='sort' href='/hatchets/{{.Hatchet}}/stats/slowops?orderBy=max_ms&COLLSCAN=%v'>%v</th>`, collscan, desc)
-	html += fmt.Sprintf(`<th>total ms <a class='sort' href='/hatchets/{{.Hatchet}}/stats/slowops?orderBy=total_ms&COLLSCAN=%v'>%v</th>`, collscan, desc)
-	html += fmt.Sprintf(`<th>reslen <a class='sort' href='/hatchets/{{.Hatchet}}/stats/slowops?orderBy=reslen&COLLSCAN=%v'>%v</th>`, collscan, desc)
+	html += fmt.Sprintf(`<th>op <a class='sort' href='/api/tma/hatchets/{{.Hatchet}}/stats/slowops?orderBy=op&COLLSCAN=%v'>%v</th>`, collscan, asc)
+	html += fmt.Sprintf(`<th>namespace <a class='sort' href='/api/tma/hatchets/{{.Hatchet}}/stats/slowops?orderBy=ns&order=ASC&COLLSCAN=%v'>%v</th>`, collscan, asc)
+	html += fmt.Sprintf(`<th>count <a class='sort' href='/api/tma/hatchets/{{.Hatchet}}/stats/slowops?orderBy=count&COLLSCAN=%v'>%v</th>`, collscan, desc)
+	html += fmt.Sprintf(`<th>avg ms <a class='sort' href='/api/tma/hatchets/{{.Hatchet}}/stats/slowops?orderBy=avg_ms&COLLSCAN=%v'>%v</th>`, collscan, desc)
+	html += fmt.Sprintf(`<th>max ms <a class='sort' href='/api/tma/hatchets/{{.Hatchet}}/stats/slowops?orderBy=max_ms&COLLSCAN=%v'>%v</th>`, collscan, desc)
+	html += fmt.Sprintf(`<th>total ms <a class='sort' href='/api/tma/hatchets/{{.Hatchet}}/stats/slowops?orderBy=total_ms&COLLSCAN=%v'>%v</th>`, collscan, desc)
+	html += fmt.Sprintf(`<th>reslen <a class='sort' href='/api/tma/hatchets/{{.Hatchet}}/stats/slowops?orderBy=reslen&COLLSCAN=%v'>%v</th>`, collscan, desc)
 	if download == "" {
 		html += fmt.Sprintf(`<th valign='middle'>index <label title='Show COLLSCAN only' style='cursor: pointer; font-weight: normal; font-size: 0.85em;'><input type='checkbox' id='collscan' onchange='getSlowopsStats(); return false;' %v> only</label></th>`, checked)
 	} else {

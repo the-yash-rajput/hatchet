@@ -14,9 +14,9 @@ import (
 // APIHandler responds to API calls
 func APIHandler(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	/** APIs
-	 * /api/hatchet/v1.0/hatchets/{hatchet}/logs/all
-	 * /api/hatchet/v1.0/hatchets/{hatchet}/logs/slowops
-	 * /api/hatchet/v1.0/hatchets/{hatchet}/stats/slowops
+	 * /api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/logs/all
+	 * /api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/logs/slowops
+	 * /api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/stats/slowops
 	 */
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")

@@ -15,7 +15,7 @@ import (
 // DriverHandler responds to API calls
 func DriverHandler(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	/** APIs
-	 * /api/hatchet/v1.0/mongodb/{mongo}/drivers/{driver}?compatibleWith={version}
+	 * /api/tma/hatchet/v1.0/mongodb/{mongo}/drivers/{driver}?compatibleWith={version}
 	 */
 	w.Header().Set("Content-Type", "application/json")
 	driver := params.ByName("driver")

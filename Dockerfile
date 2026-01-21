@@ -20,7 +20,7 @@ FROM alpine:3.19
 LABEL maintainer="Ken Chen <ken.chen@simagix.com>"
 RUN apk add --no-cache ca-certificates
 RUN addgroup -S simagix && adduser -S simagix -G simagix
-COPY --from=builder /github.com/simagix/hatchet/hatchet /bin/hatchet
+COPY --from=builder /github.com/simagix/api/tma/hatchet/hatchet /bin/hatchet
 RUN ln -s /bin/hatchet /hatchet
 USER simagix
 WORKDIR /home/simagix

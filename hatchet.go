@@ -199,16 +199,16 @@ func Run(fullVersion string) {
 	router.GET("/", Handler)
 	router.GET("/favicon.ico", FaviconHandler)
 
-	router.GET("/api/hatchet/v1.0/mongodb/:mongo/drivers/:driver", DriverHandler)
-	router.GET("/api/hatchet/v1.0/hatchets/:hatchet/:category/:attr", APIHandler)
+	router.GET("/api/tma/hatchet/v1.0/mongodb/:mongo/drivers/:driver", DriverHandler)
+	router.GET("/api/tma/hatchet/v1.0/api/tma/hatchets/:hatchet/:category/:attr", APIHandler)
 
-	router.GET("/hatchets/:hatchet/charts/:attr", ChartsHandler)
-	router.GET("/hatchets/:hatchet/logs/:attr", LogsHandler)
-	router.GET("/hatchets/:hatchet/stats/:attr", StatsHandler)
-	router.POST("/api/hatchet/v1.0/rename", RenameHandler)
-	router.DELETE("/api/hatchet/v1.0/delete", DeleteHandler)
-	router.POST("/api/hatchet/v1.0/upload", UploadHandler)
-	router.GET("/api/hatchet/v1.0/upload/status/:name", UploadStatusHandler)
+	router.GET("/api/tma/hatchets/:hatchet/charts/:attr", ChartsHandler)
+	router.GET("/api/tma/hatchets/:hatchet/logs/:attr", LogsHandler)
+	router.GET("/api/tma/hatchets/:hatchet/stats/:attr", StatsHandler)
+	router.POST("/api/tma/hatchet/v1.0/rename", RenameHandler)
+	router.DELETE("/api/tma/hatchet/v1.0/delete", DeleteHandler)
+	router.POST("/api/tma/hatchet/v1.0/upload", UploadHandler)
+	router.GET("/api/tma/hatchet/v1.0/upload/status/:name", UploadStatusHandler)
 
 	addr := fmt.Sprintf(":%d", *port)
 	if listener, err := net.Listen("tcp", addr); err != nil {

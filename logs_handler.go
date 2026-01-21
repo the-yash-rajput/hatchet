@@ -14,8 +14,8 @@ import (
 // LogsHandler responds to charts API calls
 func LogsHandler(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	/** APIs
-	 * /hatchets/{hatchet}/logs/all
-	 * /hatchets/{hatchet}/logs/slowops
+	 * /api/tma/hatchets/{hatchet}/logs/all
+	 * /api/tma/hatchets/{hatchet}/logs/slowops
 	 */
 	hatchetName := params.ByName("hatchet")
 	attr := params.ByName("attr")

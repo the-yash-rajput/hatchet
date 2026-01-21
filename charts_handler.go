@@ -59,7 +59,7 @@ var charts = map[string]Chart{
 // ChartsHandler responds to charts API calls
 func ChartsHandler(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	/** APIs
-	 * /hatchets/{hatchet}/charts/ops
+	 * /api/tma/hatchets/{hatchet}/charts/ops
 	 */
 	hatchetName := params.ByName("hatchet")
 	attr := params.ByName("attr")

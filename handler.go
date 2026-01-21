@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	HTML_API_PREFIX = "/hatchets/"
-	REST_API_PREFIX = "/api/hatchet/v1.0/hatchets/"
+	HTML_API_PREFIX = "/api/tma/hatchets/"
+	REST_API_PREFIX = "/api/tma/hatchet/v1.0/api/tma/hatchets/"
 )
 
 // isAjaxRequest checks if the request is an AJAX request

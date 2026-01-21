@@ -23,7 +23,7 @@ func GetDrivers() *map[string]interface{} {
 		filename := "drivers.json"
 		data, err := os.ReadFile(filename)
 		if err != nil {
-			url := "https://raw.githubusercontent.com/simagix/hatchet/main/drivers.json"
+			url := "https://raw.githubusercontent.com/simagix/api/tma/hatchet/main/drivers.json"
 			log.Println("download driver manifest from", url)
 			resp, err := http.Get(url)
 			if err != nil {

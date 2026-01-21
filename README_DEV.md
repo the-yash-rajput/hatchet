@@ -15,30 +15,30 @@ Note that there are a few indexes created during the logs processings  But, you 
 ## View Available Reports
 The easiest way is to go to the home page `http://localhost:3721` and following the instructions to view available reports.  Each report is also available using its own URL with additional parameters defined in the query string.  Below are a few examples:
 
-- `/hatchets/{hatchet}/stats/audit` view audit data
-- `/hatchets/{hatchet}/stats/slowops?COLLSCAN=true&orderBy=count` views stats summary of COLLSCAN logs and sorted by *count*
-- `/hatchets/{hatchet}/logs/slowops` views top 23 slowest ops logs
-- `/hatchets/{hatchet}/logs/slowops?topN=100` views top 100 slowest ops logs
-- `/hatchets/{hatchet}/logs/all` views all logs, and available query string parameters are:
+- `/api/tma/hatchets/{hatchet}/stats/audit` view audit data
+- `/api/tma/hatchets/{hatchet}/stats/slowops?COLLSCAN=true&orderBy=count` views stats summary of COLLSCAN logs and sorted by *count*
+- `/api/tma/hatchets/{hatchet}/logs/slowops` views top 23 slowest ops logs
+- `/api/tma/hatchets/{hatchet}/logs/slowops?topN=100` views top 100 slowest ops logs
+- `/api/tma/hatchets/{hatchet}/logs/all` views all logs, and available query string parameters are:
   - component
   - context
   - duration (begin_datetime,end_datetime)
   - limit ([offset,]limit)
   - severity
-- `/hatchets/{hatchet}/logs/all?component=NETWORK` searches logs where *component* = *NETWORK*.  Available option are:
+- `/api/tma/hatchets/{hatchet}/logs/all?component=NETWORK` searches logs where *component* = *NETWORK*.  Available option are:
   - component
   - context
   - duration (begin_datetime,end_datetime)
   - severity
-- `/hatchets/{hatchet}/charts/connections[?type={}]` views connections charts, types are:
+- `/api/tma/hatchets/{hatchet}/charts/connections[?type={}]` views connections charts, types are:
   - accepted
   - time
   - total
-- `/hatchets/{hatchet}/charts/ops?type={}` views average ops time chart, types are:
+- `/api/tma/hatchets/{hatchet}/charts/ops?type={}` views average ops time chart, types are:
   - stats
   - counts
-- `/hatchets/{hatchet}/charts/reslen-ip?ip={}` views response length by IPs chart, types are:
-- `/hatchets/{hatchet}/charts/reslen-ns?ns={}` views response length by IPs chart, types are:
+- `/api/tma/hatchets/{hatchet}/charts/reslen-ip?ip={}` views response length by IPs chart, types are:
+- `/api/tma/hatchets/{hatchet}/charts/reslen-ns?ns={}` views response length by IPs chart, types are:
 ```
 
 ## Query SQLite3 Database
@@ -92,9 +92,9 @@ sqlite3 -header -separator $'\t' ./data/hatchet.db "SELECT * FROM mongod;" > mon
 ```
 
 ## Hatchet API
-Hatchet provides a number of APIs to output JSON data. They work similarly to the URLs but with a prefix `/api/hatchet/v1.0`.  The APIs are as follows:
-- /api/hatchet/v1.0/hatchets/{hatchet}/stats/audit
-- /api/hatchet/v1.0/hatchets/{hatchet}/stats/slowops[?orderyBy=] ; Possible values of *orderBy* are:
+Hatchet provides a number of APIs to output JSON data. They work similarly to the URLs but with a prefix `/api/tma/hatchet/v1.0`.  The APIs are as follows:
+- /api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/stats/audit
+- /api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/stats/slowops[?orderyBy=] ; Possible values of *orderBy* are:
   - op
   - ns
   - count
@@ -102,9 +102,9 @@ Hatchet provides a number of APIs to output JSON data. They work similarly to th
   - max_ms
   - total_ms
   - reslen
-- /api/hatchet/v1.0/hatchets/{hatchet}/logs/all
-- /api/hatchet/v1.0/hatchets/{hatchet}/logs/slowops[?topN=] ; The default value of topN is 23.
-- /api/hatchet/v1.0/mongodb/{version}/drivers/{driver}[?compatibleWith={driver version}]
+- /api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/logs/all
+- /api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/logs/slowops[?topN=] ; The default value of topN is 23.
+- /api/tma/hatchet/v1.0/mongodb/{version}/drivers/{driver}[?compatibleWith={driver version}]
 
 ## Output Logs in Legacy Format
 ```bash

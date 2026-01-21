@@ -36,8 +36,8 @@ func renderErrorPage(w http.ResponseWriter, r *http.Request, hatchetName string,
 // StatsHandler responds to API calls
 func StatsHandler(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	/** APIs
-	 * /hatchets/{hatchet}/stats/audit
-	 * /hatchets/{hatchet}/stats/slowops
+	 * /api/tma/hatchets/{hatchet}/stats/audit
+	 * /api/tma/hatchets/{hatchet}/stats/slowops
 	 */
 	hatchetName := params.ByName("hatchet")
 	attr := params.ByName("attr")
