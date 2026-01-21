@@ -524,7 +524,7 @@ func getMainPage() string {
 				.then(data => {
 					loading.style.display = 'none';
 					if (data.ok) {
-						loadData('/');
+						loadData('/hatchets');
 					} else {
 						alert('Error: ' + data.error);
 					}
@@ -545,7 +545,7 @@ func getMainPage() string {
 				.then(data => {
 					loading.style.display = 'none';
 					if (data.ok) {
-						loadData('/');
+						loadData('/hatchets');
 					} else {
 						alert('Error: ' + data.error);
 					}
