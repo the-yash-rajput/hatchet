@@ -344,11 +344,28 @@ const headers = `<!DOCTYPE html>
     .json-content .json-error { color: #f44747; font-weight: bold; }
   </style>
   <script>
+    // Helper function to get auth token from session/local storage
+    function getTokenFromSessionStorage() {
+      const tokenString = window.sessionStorage.getItem("tokenInfo") || window.localStorage.getItem("tokenInfo");
+      if (tokenString) {
+        try {
+          const tokenInfo = JSON.parse(tokenString);
+          if (tokenInfo && tokenInfo.token) return tokenInfo.token;
+        } catch (e) {
+          console.error("Error parsing token:", e);
+        }
+      }
+      return null;
+    }
+
     function loadData(url, skipHistory) {
     	var loading = document.getElementById('loading');
     	loading.style.display = 'block';
     	fetch(url, {
-    		headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    		headers: { 
+    		  'X-Requested-With': 'XMLHttpRequest',
+    		  'X-Auth-Token': getTokenFromSessionStorage()
+    		}
     	})
         	.then(response => response.text())
         	.then(data => {
@@ -519,7 +536,12 @@ func getMainPage() string {
 		if (newName && newName !== oldName) {
 			var loading = document.getElementById('loading');
 			loading.style.display = 'block';
-			fetch('/api/tma/hatchet/v1.0/rename?old=' + encodeURIComponent(oldName) + '&new=' + encodeURIComponent(newName), {method: 'POST'})
+			fetch('/api/tma/hatchet/v1.0/rename?old=' + encodeURIComponent(oldName) + '&new=' + encodeURIComponent(newName), {
+				method: 'POST',
+				headers: {
+					'X-Auth-Token': getTokenFromSessionStorage()
+				}
+			})
 				.then(response => response.json())
 				.then(data => {
 					loading.style.display = 'none';
@@ -540,7 +562,12 @@ func getMainPage() string {
 		if (confirm('Delete "' + name + '"?\n\nThis action cannot be undone.')) {
 			var loading = document.getElementById('loading');
 			loading.style.display = 'block';
-			fetch('/api/tma/hatchet/v1.0/delete?name=' + encodeURIComponent(name), {method: 'DELETE'})
+			fetch('/api/tma/hatchet/v1.0/delete?name=' + encodeURIComponent(name), {
+				method: 'DELETE',
+				headers: {
+					'X-Auth-Token': getTokenFromSessionStorage()
+				}
+			})
 				.then(response => response.json())
 				.then(data => {
 					loading.style.display = 'none';
@@ -595,6 +622,12 @@ func getMainPage() string {
 		var xhr = new XMLHttpRequest();
 		xhr.open('POST', '/api/tma/hatchet/v1.0/upload', true);
 		
+		// Add authentication header
+		var token = getTokenFromSessionStorage();
+		if (token) {
+			xhr.setRequestHeader('X-Auth-Token', token);
+		}
+		
 		xhr.upload.onprogress = function(e) {
 			if (e.lengthComputable) {
 				var percent = Math.round((e.loaded / e.total) * 100);
@@ -633,7 +666,11 @@ func getMainPage() string {
 		
 		var poll = setInterval(function() {
 			pollCount++;
-			fetch('/api/tma/hatchet/v1.0/upload/status/' + encodeURIComponent(name))
+			fetch('/api/tma/hatchet/v1.0/upload/status/' + encodeURIComponent(name), {
+				headers: {
+					'X-Auth-Token': getTokenFromSessionStorage()
+				}
+			})
 				.then(response => response.json())
 				.then(data => {
 					if (data.status === 'complete') {
@@ -743,105 +780,101 @@ func getMainPage() string {
 	.action-btn {
 		background: none;
 		border: none;
-		cursor: pointer;
-		padding: 2px 6px;
-		color: #E8B923;
-		font-size: 14px;
-		border-radius: 3px;
-	}
-	.action-btn:hover {
-		color: #D4A017;
-	}
-	.delete-btn {
-		color: #CC5555;
-	}
-	.delete-btn:hover {
-		color: #FF4444;
-	}
-	.help-link {
-		color: var(--accent-color-3);
-		cursor: pointer;
-		font-size: 1em;
-		text-decoration: none;
-	}
-	.help-link:hover {
-		color: var(--text-color);
-		text-decoration: underline;
-	}
-	.help-link i {
-		margin-right: 6px;
-	}
-	.help-section {
-		display: none;
-		margin-top: 15px;
-		border: 1px solid var(--border-color);
-		border-radius: 6px;
-		background: #fff;
-		padding: 16px;
-	}
-	.help-section.open {
-		display: block;
-	}
-	.help-section h3:first-child {
-		margin-top: 0;
-	}
-	.home-container {
-		background: #EEF2EE;
-		border-radius: 24px;
-		padding: 30px 40px;
-		margin: 30px auto;
-		max-width: 1200px;
-		box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-	}
+                cursor: pointer;
+                padding: 2px 6px;
+                color: #E8B923;
+                font-size: 14px;
+                border-radius: 3px;
+        }
+        .action-btn:hover {
+                color: #D4A017;
+        }
+        .delete-btn {
+                color: #CC5555;
+        }
+        .delete-btn:hover {
+                color: #FF4444;
+        }
+        .help-link {
+                color: var(--accent-color-3);
+                cursor: pointer;
+                font-size: 1em;
+                text-decoration: none;
+        }
+        .help-link:hover {
+                color: var(--text-color);
+                text-decoration: underline;
+        }
+        .help-link i {
+                margin-right: 6px;
+        }
+        .help-section {
+                display: none;
+                margin-top: 15px;
+                border: 1px solid var(--border-color);
+                border-radius: 6px;
+                background: #fff;
+                padding: 16px;
+        }
+        .help-section.open {
+                display: block;
+        }
+        .help-section h3:first-child {
+                margin-top: 0;
+        }
+        .home-container {
+                background: #EEF2EE;
+                border-radius: 24px;
+                padding: 30px 40px;
+                margin: 30px auto;
+                max-width: 1200px;
+                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
 </style>
-
 <div class="home-container">
 <!-- Row 1: Title/Description (50%) | Tutorial Video (50%) -->
 <div style='display: flex; gap: 30px; padding: 15px 0; border-bottom: 1px solid var(--border-color); margin-bottom: 15px;'>
-	<div style='flex: 1; display: flex; flex-direction: column; justify-content: flex-start;'>
-		<h1 style='margin: 0 0 16px 0; font-size: 3.2em; font-family: Righteous, cursive; letter-spacing: 3px; color: #333;'>Logs Analyser (MongoDB) <img src='data:image/png;base64,` + CHEN_ICO + `' style='vertical-align: top; margin-left: 2px; transform: rotate(-23deg); position: relative; top: -5px;'/></h1>
-		<p style='margin: 0; color: #444; font-size: 1.35em; line-height: 1.6; font-style: italic;'>
-			Like a skilled woodsman reading the rings of a tree, TM – Mongo Analyser reveals the stories hidden within your MongoDB logs — from performance patterns and activity rhythms to security insights and troubleshooting trails.
-		</p>
-	</div>
+        <div style='flex: 1; display: flex; flex-direction: column; justify-content: flex-start;'>
+                <h1 style='margin: 0 0 16px 0; font-size: 3.2em; font-family: Righteous, cursive; letter-spacing: 3px; color: #333;'>Logs Analyser (MongoDB) <img src='data:image/png;base64,` + CHEN_ICO + `' style='vertical-align: top; margin-left: 2px; transform: rotate(-23deg); position: relative; top: -5px;'/></h1>
+                <p style='margin: 0; color: #444; font-size: 1.35em; line-height: 1.6; font-style: italic;'>
+                        Like a skilled woodsman reading the rings of a tree, TM – Mongo Analyser reveals the stories hidden within your MongoDB logs — from performance patterns and activity rhythms to security insights and troubleshooting trails.
+                </p>
+        </div>
 </div>
-
 <!-- Row 2: Upload and Hatcheted Logs Selection (full width) -->
 <div style='margin-bottom: 15px;'>
-	<div style='display: flex; gap: 20px; align-items: flex-start;'>
-		<!-- Upload Section -->
-		<div style='flex: 0 0 280px;'>
-			<label style='font-weight: bold; font-size: 1.3em; margin-bottom: 8px; display: block;'>Upload log file:</label>
-			<div id='upload-zone' class='upload-zone' onclick='document.getElementById("file-input").click()'>
-				<i class='fa fa-cloud-upload' style='font-size: 2em; color: #666; margin-bottom: 8px;'></i>
-				<div>Drop file here or click to browse</div>
-				<div style='font-size: 0.85em; color: #888; margin-top: 4px;'>MongoDB log files, .gz supported (max 200 MB)</div>
-				<input type='file' id='file-input' style='display: none;' onchange='handleFileSelect(this.files[0])'>
-			</div>
-			<div id='upload-status' style='margin-top: 8px; font-size: 0.9em;'></div>
-		</div>
-		<!-- Hatcheted Logs Table -->
-		<div style='flex: 1;'>
-			<label style='font-weight: bold; font-size: 1.3em; margin-bottom: 8px; display: block;'>Select a log file:</label>
-			<div class='hatchet-table-container'>
-				<table class='hatchet-table'>
-					<tr><th>#</th><th>Log File</th><th>Processed Time</th></tr>
+        <div style='display: flex; gap: 20px; align-items: flex-start;'>
+                <!-- Upload Section -->
+                <div style='flex: 0 0 280px;'>
+                        <label style='font-weight: bold; font-size: 1.3em; margin-bottom: 8px; display: block;'>Upload log file:</label>
+                        <div id='upload-zone' class='upload-zone' onclick='document.getElementById("file-input").click()'>
+                                <i class='fa fa-cloud-upload' style='font-size: 2em; color: #666; margin-bottom: 8px;'></i>
+                                <div>Drop file here or click to browse</div>
+                                <div style='font-size: 0.85em; color: #888; margin-top: 4px;'>MongoDB log files, .gz supported (max 200 MB)</div>
+                                <input type='file' id='file-input' style='display: none;' onchange='handleFileSelect(this.files[0])'>
+                        </div>
+                        <div id='upload-status' style='margin-top: 8px; font-size: 0.9em;'></div>
+                </div>
+                <!-- Hatcheted Logs Table -->
+                <div style='flex: 1;'>
+                        <label style='font-weight: bold; font-size: 1.3em; margin-bottom: 8px; display: block;'>Select a log file:</label>
+                        <div class='hatchet-table-container'>
+                                <table class='hatchet-table'>
+                                        <tr><th>#</th><th>Log File</th><th>Processed Time</th></tr>
 {{range $n, $entry := .Hatchets}}
-					<tr class='clickable-row' onclick='selectHatchet("{{$entry.Name}}")'>
-						<td style='text-align: center; width: 40px;'>{{add $n 1}}</td>
-						<td><button class='action-btn' onclick='renameHatchet("{{$entry.Name}}", event)' title='Rename'><i class='fa fa-pencil'></i></button><button class='action-btn delete-btn' onclick='deleteHatchet("{{$entry.Name}}", event)' title='Delete'><i class='fa fa-trash'></i></button> {{$entry.Name}}</td>
-						<td class='utc-time' data-utc='{{$entry.CreatedAt}}'>{{$entry.CreatedAt}}</td>
-					</tr>
+                                        <tr class='clickable-row' onclick='selectHatchet("{{$entry.Name}}")'>
+                                                <td style='text-align: center; width: 40px;'>{{add $n 1}}</td>
+                                                <td><button class='action-btn' onclick='renameHatchet("{{$entry.Name}}", event)' title='Rename'><i class='fa fa-pencil'></i></button><button class='action-btn delete-btn' onclick='deleteHatchet("{{$entry.Name}}", event)' title='Delete'><i class='fa fa-trash'></i></button> {{$entry.Name}}</td>
+                                                <td class='utc-time' data-utc='{{$entry.CreatedAt}}'>{{$entry.CreatedAt}}</td>
+                                        </tr>
 {{else}}
-					<tr><td colspan='3' style='text-align: center; color: #666;'>No logs processed yet</td></tr>
+                                        <tr><td colspan='3' style='text-align: center; color: #666;'>No logs processed yet</td></tr>
 {{end}}
-				</table>
-			</div>
-		</div>
-	</div>
+                                </table>
+                        </div>
+                </div>
+        </div>
 </div>
-
-
 <div id="help-section" class="help-section">
 <h3>Reports</h3>
     <table width='100%'>
@@ -855,45 +888,44 @@ func getMainPage() string {
 <h3 style='margin-top: 24px;'>Charts</h3>
     <table width='100%'>
       <tr><th></th><th>Title</th><th>Description</th></tr>`
-	size := len(charts) - 1
-	tables := make([]Chart, size)
-	for k, chart := range charts {
-		if k == "instruction" {
-			continue
-		}
-		tables[chart.Index-1] = chart
-	}
-	for _, chart := range tables {
-		template += fmt.Sprintf("<tr><td align=right>%d</td><td>%v</td><td>%v</td></tr>\n",
-			chart.Index, chart.Title, chart.Descr)
-	}
-	template += "</table>"
-	template += `<h3 style='margin-top: 24px;'>URL</h3>
+        size := len(charts) - 1
+        tables := make([]Chart, size)
+        for k, chart := range charts {
+                if k == "instruction" {
+                        continue
+                }
+                tables[chart.Index-1] = chart
+        }
+        for _, chart := range tables {
+                template += fmt.Sprintf("<tr><td align=right>%d</td><td>%v</td><td>%v</td></tr>\n",
+                        chart.Index, chart.Title, chart.Descr)
+        }
+        template += "</table>"
+        template += `<h3 style='margin-top: 24px;'>URL</h3>
 <ul class="api">
-	<li>/</li>
-	<li>/api/tma/hatchets/{hatchet}/charts/{chart}[?type={str}]</li>
-	<li>/api/tma/hatchets/{hatchet}/logs/all[?component={str}&context={str}&duration={date},{date}&severity={str}&limit=[{offset},]{int}]</li>
-	<li>/api/tma/hatchets/{hatchet}/logs/slowops[?topN={int}]</li>
-	<li>/api/tma/hatchets/{hatchet}/stats/slowops[?COLLSCAN={bool}&orderBy={str}]</li>
+        <li>/</li>
+        <li>/api/tma/hatchets/{hatchet}/charts/{chart}[?type={str}]</li>
+        <li>/api/tma/hatchets/{hatchet}/logs/all[?component={str}&context={str}&duration={date},{date}&severity={str}&limit=[{offset},]{int}]</li>
+        <li>/api/tma/hatchets/{hatchet}/logs/slowops[?topN={int}]</li>
+        <li>/api/tma/hatchets/{hatchet}/stats/slowops[?COLLSCAN={bool}&orderBy={str}]</li>
 </ul>
-
 <h3 style='margin-top: 24px;'>API</h3>
 <ul class="api">
-	<li><b>POST</b> /api/tma/hatchet/v1.0/upload - Upload log file (multipart form: logfile, name)</li>
-	<li><b>GET</b> /api/tma/hatchet/v1.0/upload/status/{name} - Check upload processing status</li>
-	<li><b>POST</b> /api/tma/hatchet/v1.0/rename?old={name}&new={name} - Rename a hatchet</li>
-	<li><b>DELETE</b> /api/tma/hatchet/v1.0/delete?name={name} - Delete a hatchet</li>
-	<li>/api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/logs/all[?component={str}&context={str}&duration={date},{date}&severity={str}&limit=[{offset},]{int}]</li>
-	<li>/api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/logs/slowops[?topN={int}]</li>
-	<li>/api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/stats/audit</li>
-	<li>/api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/stats/slowops[?COLLSCAN={bool}&orderBy={str}]</li>
-	<li>/api/tma/hatchet/v1.0/mongodb/{version}/drivers/{driver}?compatibleWith={driver version}</li>
+        <li><b>POST</b> /api/tma/hatchet/v1.0/upload - Upload log file (multipart form: logfile, name)</li>
+        <li><b>GET</b> /api/tma/hatchet/v1.0/upload/status/{name} - Check upload processing status</li>
+        <li><b>POST</b> /api/tma/hatchet/v1.0/rename?old={name}&new={name} - Rename a hatchet</li>
+        <li><b>DELETE</b> /api/tma/hatchet/v1.0/delete?name={name} - Delete a hatchet</li>
+        <li>/api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/logs/all[?component={str}&context={str}&duration={date},{date}&severity={str}&limit=[{offset},]{int}]</li>
+        <li>/api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/logs/slowops[?topN={int}]</li>
+        <li>/api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/stats/audit</li>
+        <li>/api/tma/hatchet/v1.0/api/tma/hatchets/{hatchet}/stats/slowops[?COLLSCAN={bool}&orderBy={str}]</li>
+        <li>/api/tma/hatchet/v1.0/mongodb/{version}/drivers/{driver}?compatibleWith={driver version}</li>
 </ul>
 </div>
 </div><!-- end home-container -->
 <h4 align='center'><hr/>{{.Version}}</h4>
 `
-	template += fmt.Sprintf(`
+        template += fmt.Sprintf(`
   <div class="footer">
     <img valign="middle" src='data:image/png;base64,%v'/>
     TM – Mongo Analyser
@@ -902,23 +934,21 @@ func getMainPage() string {
     </span>
   </div>
 `, CHEN_ICO)
-
-	return template
+        return template
 }
-
 // GetErrorTemplate returns an error page template
 func GetErrorTemplate() (*template.Template, error) {
-	html := headers + `
+        html := headers + `
 <div style='max-width: 600px; margin: 50px auto; text-align: center;'>
-	<h1 style='color: #DB4437; font-size: 2em;'><i class="fa fa-exclamation-triangle"></i> Error</h1>
-	<div style='background: #FFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin: 20px 0;'>
-		<p style='color: #666; font-size: 1.1em; margin-bottom: 15px;'>{{.Message}}</p>
-		<p style='color: #999; font-size: 0.9em;'>TM - Logs Analyser: <strong>{{.Hatchet}}</strong></p>
-	</div>
-	<button class='button' onclick="location.href='/hatchets';" style='font-size: 1.1em; padding: 10px 30px;'>
-		<i class="fa fa-home"></i> Back to Home
-	</button>
+        <h1 style='color: #DB4437; font-size: 2em;'><i class="fa fa-exclamation-triangle"></i> Error</h1>
+        <div style='background: #FFF; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin: 20px 0;'>
+                <p style='color: #666; font-size: 1.1em; margin-bottom: 15px;'>{{.Message}}</p>
+                <p style='color: #999; font-size: 0.9em;'>TM - Logs Analyser: <strong>{{.Hatchet}}</strong></p>
+        </div>
+        <button class='button' onclick="location.href='/hatchets';" style='font-size: 1.1em; padding: 10px 30px;'>
+                <i class="fa fa-home"></i> Back to Home
+        </button>
 </div>
 </body></html>`
-	return template.New("error").Parse(html)
+        return template.New("error").Parse(html)
 }
